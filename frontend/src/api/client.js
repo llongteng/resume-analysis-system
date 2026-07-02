@@ -6,46 +6,52 @@ const MOCK_DATA = {
   health: { success: true, data: { status: 'healthy', version: '1.0.0' } },
   history: {
     success: true,
-    data: {
-      analyses: [
-        {
-          id: 'demo-001',
-          resume_name: '张三_前端工程师.pdf',
-          job_title: '高级前端工程师',
-          match_score: 85,
-          created_at: '2024-01-15T10:30:00Z',
-          status: 'completed'
-        },
-        {
-          id: 'demo-002',
-          resume_name: '李四_后端工程师.pdf',
-          job_title: 'Python 后端开发',
-          match_score: 72,
-          created_at: '2024-01-14T15:20:00Z',
-          status: 'completed'
-        },
-        {
-          id: 'demo-003',
-          resume_name: '王五_全栈工程师.pdf',
-          job_title: '全栈开发工程师',
-          match_score: 91,
-          created_at: '2024-01-13T09:15:00Z',
-          status: 'completed'
-        }
-      ],
-      total: 3,
-      page: 1,
-      page_size: 10
-    }
+    data: [
+      {
+        id: 'demo-001',
+        candidate_name: '张三',
+        file_name: '张三_前端工程师.pdf',
+        job_title: '高级前端工程师',
+        match_score: 85,
+        score_level: 'high',
+        created_at: '2024-01-15 10:30:00'
+      },
+      {
+        id: 'demo-002',
+        candidate_name: '李四',
+        file_name: '李四_后端工程师.pdf',
+        job_title: 'Python 后端开发',
+        match_score: 72,
+        score_level: 'medium',
+        created_at: '2024-01-14 15:20:00'
+      },
+      {
+        id: 'demo-003',
+        candidate_name: '王五',
+        file_name: '王五_全栈工程师.pdf',
+        job_title: '全栈开发工程师',
+        match_score: 91,
+        score_level: 'high',
+        created_at: '2024-01-13 09:15:00'
+      }
+    ]
   },
   analysis: {
     success: true,
     data: {
       id: 'demo-001',
-      resume: {
-        name: '张三',
-        email: 'zhangsan@example.com',
-        phone: '13800138000',
+      resume_data: {
+        basic_info: {
+          name: '张三',
+          phone: '13800138000',
+          email: 'zhangsan@example.com',
+          address: '北京市朝阳区'
+        },
+        job_intention: {
+          target_position: '高级前端工程师',
+          expected_salary: '25-35K',
+          target_city: '北京'
+        },
         education: [
           {
             school: '北京大学',
@@ -55,7 +61,7 @@ const MOCK_DATA = {
             end_date: '2020-06'
           }
         ],
-        experience: [
+        work_experience: [
           {
             company: '字节跳动',
             position: '前端工程师',
@@ -66,25 +72,25 @@ const MOCK_DATA = {
         ],
         skills: ['React', 'TypeScript', 'JavaScript', 'Node.js', 'Vue', 'Webpack', 'Git']
       },
-      job_description: '高级前端工程师\n\n要求：\n- 5年以上前端开发经验\n- 精通 React/Vue\n- 熟悉 TypeScript\n- 有大型项目经验',
-      match_result: {
-        overall_score: 85,
-        dimension_scores: {
-          skills_match: 90,
-          experience_match: 80,
-          education_match: 85,
-          project_match: 75
-        },
-        matched_skills: ['React', 'TypeScript', 'JavaScript', 'Vue', 'Webpack'],
-        missing_skills: ['Next.js', '微前端'],
-        recommendations: [
-          '候选人技术栈与岗位需求高度匹配',
-          '建议关注候选人在大型项目中的架构设计能力',
-          '可以进一步了解候选人的团队协作经验'
-        ]
+      job_analysis: {
+        title: '高级前端工程师',
+        requirements: ['5年以上前端开发经验', '精通 React/Vue', '熟悉 TypeScript', '有大型项目经验']
       },
-      ai_report: '## 综合评估\n\n张三是一位经验丰富的前端工程师，在字节跳动有 3 年以上的工作经验。\n\n### 优势\n- 技术栈全面，覆盖主流前端框架\n- 大厂背景，有大型项目经验\n- 持续学习新技术\n\n### 待提升\n- 缺少 Next.js 等 SSR 框架经验\n- 微前端架构经验不足\n\n### 建议\n整体匹配度较高，建议进入面试环节。',
-      created_at: '2024-01-15T10:30:00Z'
+      match_result: {
+        match_score: 85,
+        score_level: 'high',
+        score_items: {
+          skill_match: { score: 90, weight: 0.4 },
+          project_match: { score: 75, weight: 0.25 },
+          experience_match: { score: 80, weight: 0.2 },
+          keyword_coverage: { score: 88, weight: 0.15 }
+        },
+        matched_keywords: ['React', 'TypeScript', 'JavaScript', 'Vue', 'Webpack', 'Node.js'],
+        missing_keywords: ['Next.js', '微前端', 'SSR'],
+        ai_summary: '张三是一位经验丰富的前端工程师，在字节跳动有 3 年以上的工作经验。技术栈全面，覆盖主流前端框架，有大型项目经验。整体匹配度较高，建议进入面试环节。',
+        risk_points: ['缺少 Next.js 等 SSR 框架经验', '微前端架构经验不足'],
+        interview_questions: ['请介绍一下你在字节跳动负责的最大的项目', '你如何处理大型项目的性能优化？', '对微前端架构有什么了解？']
+      }
     }
   }
 }
@@ -124,7 +130,7 @@ class ApiClient {
       return {
         success: true,
         data: {
-          id: 'demo-' + Date.now(),
+          resume_id: 'demo-' + Date.now(),
           filename: 'demo-resume.pdf',
           status: 'uploaded'
         }
@@ -158,19 +164,14 @@ class ApiClient {
     if (url.includes('/resumes/') && url.includes('/parse')) {
       return {
         success: true,
-        data: {
-          id: 'demo-parsed',
-          status: 'parsed',
-          resume: MOCK_DATA.analysis.data.resume
-        }
+        data: MOCK_DATA.analysis.data.resume_data
       }
     }
     if (url.includes('/match')) {
       return {
         success: true,
         data: {
-          match_result: MOCK_DATA.analysis.data.match_result,
-          ai_report: MOCK_DATA.analysis.data.ai_report
+          match_result: MOCK_DATA.analysis.data.match_result
         }
       }
     }
