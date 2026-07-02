@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings
 from functools import lru_cache
+import re
 
 
 class Settings(BaseSettings):
@@ -12,8 +13,8 @@ class Settings(BaseSettings):
     # AI Model
     AI_PROVIDER: str = "openai_compatible"
     AI_API_KEY: str = ""
-    AI_BASE_URL: str = "https://dashscope.aliyuncs.com/compatible-mode/v1"
-    AI_MODEL_NAME: str = "qwen-plus"
+    AI_BASE_URL: str = "https://token-plan-cn.xiaomimimo.com/v1"
+    AI_MODEL_NAME: str = "mimo-v2.5-pro"
     AI_TIMEOUT: int = 30
 
     # Cache
@@ -32,7 +33,20 @@ class Settings(BaseSettings):
 
     @property
     def cors_origins_list(self) -> list[str]:
-        return [origin.strip() for origin in self.CORS_ALLOW_ORIGINS.split(",")]
+        return [
+            origin.strip()
+            for origin in self.CORS_ALLOW_ORIGINS.split(",")
+            if origin.strip() and "*" not in origin
+        ]
+
+    @property
+    def cors_origin_regex(self) -> str | None:
+        patterns = []
+        for origin in self.CORS_ALLOW_ORIGINS.split(","):
+            origin = origin.strip()
+            if "*" in origin:
+                patterns.append(re.escape(origin).replace(r"\*", ".*"))
+        return "|".join(f"({pattern})" for pattern in patterns) or None
 
     class Config:
         env_file = ".env"

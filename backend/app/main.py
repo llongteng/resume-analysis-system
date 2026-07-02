@@ -35,7 +35,7 @@ def create_app() -> FastAPI:
     )
 
     # 注册中间件
-    setup_middleware(app, settings.cors_origins_list)
+    setup_middleware(app, settings.cors_origins_list, settings.cors_origin_regex)
 
     # 注册路由
     app.include_router(api_router, prefix=settings.API_PREFIX)

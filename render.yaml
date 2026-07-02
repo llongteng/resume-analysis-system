@@ -2,6 +2,7 @@ services:
   - type: web
     name: resume-analyzer-api
     runtime: python
+    rootDir: backend
     region: singapore  # 亚洲区域，延迟较低
     plan: free
     buildCommand: pip install -r requirements.txt
@@ -17,9 +18,9 @@ services:
       - key: AI_API_KEY
         sync: false  # 需要在 Render 控制台手动设置
       - key: AI_BASE_URL
-        value: https://dashscope.aliyuncs.com/compatible-mode/v1
+        value: https://token-plan-cn.xiaomimimo.com/v1
       - key: AI_MODEL_NAME
-        value: qwen-plus
+        value: mimo-v2.5-pro
       - key: AI_TIMEOUT
         value: 60
       - key: CACHE_ENABLED

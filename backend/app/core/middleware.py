@@ -7,7 +7,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from app.core.logging import logger
 
 
-def setup_middleware(app: FastAPI, cors_origins: list[str]):
+def setup_middleware(app: FastAPI, cors_origins: list[str], cors_origin_regex: str | None = None):
     """注册所有中间件"""
 
     # CORS
@@ -16,6 +16,7 @@ def setup_middleware(app: FastAPI, cors_origins: list[str]):
     app.add_middleware(
         CORSMiddleware,
         allow_origins=cors_origins,
+        allow_origin_regex=cors_origin_regex,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],

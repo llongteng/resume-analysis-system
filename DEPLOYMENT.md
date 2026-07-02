@@ -4,7 +4,7 @@
 
 - **前端**: Vercel (免费静态站点)
 - **后端**: Render (免费 Python 服务)
-- **AI 模型**: 阿里云 DashScope (通义千问)
+- **AI 模型**: 小米 MiMo
 
 ## 第一步：部署后端到 Render
 
@@ -16,6 +16,7 @@
 2. 连接你的 GitHub 仓库: `llongteng/resume-analysis-system`
 3. 配置如下:
    - **Name**: `resume-analyzer-api`
+   - **Root Directory**: `backend`
    - **Region**: `Singapore` (亚洲区域)
    - **Runtime**: `Python`
    - **Build Command**: `pip install -r requirements.txt`
@@ -29,9 +30,9 @@
 | `APP_ENV` | `production` |
 | `APP_DEBUG` | `false` |
 | `AI_PROVIDER` | `openai_compatible` |
-| `AI_API_KEY` | `你的 DashScope API Key` |
-| `AI_BASE_URL` | `https://dashscope.aliyuncs.com/compatible-mode/v1` |
-| `AI_MODEL_NAME` | `qwen-plus` |
+| `AI_API_KEY` | `你的小米 MiMo API Key` |
+| `AI_BASE_URL` | `https://token-plan-cn.xiaomimimo.com/v1` |
+| `AI_MODEL_NAME` | `mimo-v2.5-pro` |
 | `AI_TIMEOUT` | `60` |
 | `CACHE_ENABLED` | `false` |
 | `DATABASE_URL` | `sqlite:///./storage/app.db` |
@@ -109,9 +110,9 @@ A: 在 Render 控制台的 "Logs" 选项卡中查看。
 ### Q: 如何更新部署？
 A: 推送代码到 GitHub，Render 和 Vercel 会自动重新部署。
 
-## 获取 DashScope API Key
+## 获取小米 MiMo API Key
 
-1. 访问 https://dashscope.console.aliyun.com/
-2. 开通通义千问服务
-3. 在 "API-KEY 管理" 中创建 API Key
-4. 充值一定金额（通义千问有免费额度）
+1. 访问小米 MiMo 控制台
+2. 开通 API 服务
+3. 创建 API Key
+4. 在 Render 环境变量中填写 `AI_API_KEY`
