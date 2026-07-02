@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: resume-analyzer-api
+    runtime: python
+    region: singapore  # 亚洲区域，延迟较低
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: AI_PROVIDER
+        value: openai_compatible
+      - key: AI_API_KEY
+        sync: false  # 需要在 Render 控制台手动设置
+      - key: AI_BASE_URL
+        value: https://dashscope.aliyuncs.com/compatible-mode/v1
+      - key: AI_MODEL_NAME
+        value: qwen-plus
+      - key: AI_TIMEOUT
+        value: 60
+      - key: CACHE_ENABLED
+        value: false
+      - key: DATABASE_URL
+        value: sqlite:///./storage/app.db
+      - key: CORS_ALLOW_ORIGINS
+        value: https://*.vercel.app
